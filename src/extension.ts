@@ -40,7 +40,7 @@ async function showQuickPickAdvancedTrans(key, editor, parameter_template_string
 
 	for (var k = 0; k < param_list.length; k++) {
 		array_string += '"' + param_list[k] + '"' + '=>' + '' + param_inner_functions[k] + '';
-		if (k < param_list.length){
+		if (k < (param_list.length-1)){
 			array_string += ",";
 		}
 	}
