@@ -7,7 +7,7 @@ const path = require("path");
 // const rp = require("request-promise");
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
-async function showQuickPickSimpleTrans(key,editor) {
+async function showQuickPickSimpleTrans(key, editor, entry, languageFilePath) {
 	let i = 0;
 	const result = await vscode.window.showQuickPick(["{{ ucwords(trans('misc." + key + "')) }}", "{{ trans('misc." + key + "') }}", "{{ ucfirst(trans_choice('misc." + key + "', 1)) }}"], {
 		placeHolder: "{{ ucwords(trans('misc." + key + "')) }},{{ trans('misc." + key + "') }}, {{ ucfirst(trans_choice('misc." + key + "', 1)) }}",
@@ -19,6 +19,13 @@ async function showQuickPickSimpleTrans(key,editor) {
 
 	var selection = editor.selection;
 	editor.edit(builder => builder.replace(selection, result));
+
+	editor.edit(builder => builder.replace(selection, result));
+	fs.appendFile(languageFilePath, entry + "\n", function (err) {
+		if (err) {
+			vscode.window.showInformationMessage(`${err}`);
+		}
+	});
 	
 }
 
@@ -34,7 +41,7 @@ function generateArrayNotation(param_array){
 return " 'param1'=>'blah','param2'=>'blah2'  ";
 }
 
-async function showQuickPickAdvancedTrans(key, editor, parameter_template_string, param_list, param_inner_functions) {
+async function showQuickPickAdvancedTrans(key, editor, parameter_template_string, param_list, param_inner_functions, entry, languageFilePath) {
 	// {{ __('settings.send_billsheet_link_as_pdf', ['billingsheet' => {{ ucfirst(Setting::get('language_bill_sheet', trans_choice('billing.sheet', 1))) }}]) }}
 	var array_string = "";
 
@@ -56,6 +63,11 @@ async function showQuickPickAdvancedTrans(key, editor, parameter_template_string
 	// vscode.window.showInformationMessage(`${result}`);
 
 	editor.edit(builder => builder.replace(selection, result));
+	fs.appendFile(languageFilePath, entry + "\n", function (err) {
+		if (err) {
+			vscode.window.showInformationMessage(`${err}`);
+		}
+	});
 
 }
 
@@ -133,23 +145,13 @@ async function insertNewTranslation(){
 
 			entry = "\"" + clean_key + "\"" + "=>" + "\"" + parameter_template_string + "\",";
 			
-			fs.appendFile(languageFilePath, entry + "\n", function (err) {
-				if (err) {
-					vscode.window.showInformationMessage(`${err}`);
-				}
-			});
-			showQuickPickAdvancedTrans(clean_key, editor, parameter_template_string, param_list, param_inner_functions);
+			showQuickPickAdvancedTrans(clean_key, editor, parameter_template_string, param_list, param_inner_functions,entry,languageFilePath);
 		}
 		else {
 			clean_key = text.replace(/[^\w\s]/gi, '').toLowerCase();
 			entry = "\"" + clean_key.replace(/ /g, "_") + "\"" + "=>" + "\"" + text + "\",";
 
-			fs.appendFile(languageFilePath, entry + "\n", function (err) {
-				if (err) {
-					vscode.window.showInformationMessage(`${err}`);
-				}
-			});
-			showQuickPickSimpleTrans(clean_key.replace(/ /g, "_"), editor);
+			showQuickPickSimpleTrans(clean_key.replace(/ /g, "_"), editor, entry, languageFilePath);
 		}
 	}
 }
