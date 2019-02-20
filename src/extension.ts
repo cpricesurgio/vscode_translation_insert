@@ -52,8 +52,8 @@ async function showQuickPickAdvancedTrans(key, editor, parameter_template_string
 		}
 	}
 	let i = 0;
-	const result = await vscode.window.showQuickPick(['{{ __t("' + key + '"),[' + array_string + '] }}'], {
-		placeHolder: '{{ __t("' + key + '"),[' + array_string + '] }}',
+	const result = await vscode.window.showQuickPick(['{{ __t("' + key + '",[' + array_string + '])}}'], {
+		placeHolder: '{{ __t("' + key + '",[' + array_string + '] )}}',
 		// onDidSelectItem: item => vscode.window.showInformationMessage(`Focus ${++i}: ${item}`)
 		onDidSelectItem: item => vscode.window.showInformationMessage(`${item}`)
 	});
