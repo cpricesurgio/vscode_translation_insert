@@ -70,7 +70,7 @@ function allIndexOf(str, toSearch) {
 	return indices;
 }
 function get3Words(str) {
-	return str.split(/\s+/).slice(0, 3).join(" ");
+	return str.split(/\s+/).slice(0, 3).join(" ").replace("{{", "").replace("}}", "");
 }
 async function insertNewTranslation(){
 	// const editor = vscode.window.activeTextEditor;
