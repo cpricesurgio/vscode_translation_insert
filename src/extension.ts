@@ -34,21 +34,28 @@ function generateArrayNotation(param_array){
 return " 'param1'=>'blah','param2'=>'blah2'  ";
 }
 
-async function showQuickPickAdvancedTrans(key, editor, parameter_template_string) {
+async function showQuickPickAdvancedTrans(key, editor, parameter_template_string,param_list) {
 	// {{ __('settings.send_billsheet_link_as_pdf', ['billingsheet' => {{ ucfirst(Setting::get('language_bill_sheet', trans_choice('billing.sheet', 1))) }}]) }}
+	var array_string = "";
 
+	for (var k = 0; k < param_list.length; k++) {
+		array_string += '"'+param_list[k]+'"'+'=>'+'""';
+		if (k < param_list.length){
+			array_string += ",";
+		}
+	}
 	let i = 0;
-	const result = await vscode.window.showQuickPick(["{{ __t('" + key + "'),[] }}"], {
-		placeHolder: "{{ __t('" + key + "'),[] }}",
+	const result = await vscode.window.showQuickPick(['{{ __t("' + key + '"),[' + array_string + '] }}'], {
+		placeHolder: '{{ __t("' + key + '"),[' + array_string + '] }}',
 		// onDidSelectItem: item => vscode.window.showInformationMessage(`Focus ${++i}: ${item}`)
-		onDidSelectItem: item => vscode.window.showInformationMessage(`Focus ${++i}: ${item}`)
+		onDidSelectItem: item => vscode.window.showInformationMessage(`${item}`)
 	});
 
-	var selection = editor.selection;
+	// var selection = editor.selection;
 
-	vscode.window.showInformationMessage(`${result}`);
+	// vscode.window.showInformationMessage(`${result}`);
 
-	editor.edit(builder => builder.replace(selection, result + "\n" + parameter_template_string + "\n"));
+	// editor.edit(builder => builder.replace(selection, result + "\n" + parameter_template_string + "\n"));
 
 }
 
@@ -87,11 +94,11 @@ async function insertNewTranslation(){
 			return;
 		}
 		var languageFilePath = os.homedir() +"/auto_lang.php";
-		vscode.window.showInformationMessage("Saving translation to" + languageFilePath);
+		// vscode.window.showInformationMessage("Saving translation to" + languageFilePath);
 		var clean_key;
 		var entry;
 		if(isAdvanced(text)){
-
+			var param_list = [];
 			var parameter_template_string = text;
 			var translation_indices_left = allIndexOf(text, "{{");
 			var translation_indices_right = allIndexOf(text, "}}");
@@ -101,7 +108,8 @@ async function insertNewTranslation(){
 			var index;
 			for (index = 0; index < index_loop_count; ++index) {
 				parameter_template_string = replaceRange(parameter_template_string, translation_indices_left[0], (translation_indices_right[0]+2), ":param"+index); 
-				vscode.window.showInformationMessage(parameter_template_string);
+				param_list.push("param" + index);
+				// vscode.window.showInformationMessage(parameter_template_string);
 				/* reset indices array because string length changes every iteration */
 				translation_indices_left = allIndexOf(parameter_template_string, "{{");
 				translation_indices_right = allIndexOf(parameter_template_string, "}}");	
@@ -127,7 +135,7 @@ async function insertNewTranslation(){
 					vscode.window.showInformationMessage(`${err}`);
 				}
 			});
-			showQuickPickAdvancedTrans(clean_key, editor, parameter_template_string);
+			showQuickPickAdvancedTrans(clean_key, editor, parameter_template_string, param_list);
 		}
 		else {
 			clean_key = text.replace(/[^\w\s]/gi, '').toLowerCase();
