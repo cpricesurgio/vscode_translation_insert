@@ -51,11 +51,11 @@ async function showQuickPickAdvancedTrans(key, editor, parameter_template_string
 		onDidSelectItem: item => vscode.window.showInformationMessage(`${item}`)
 	});
 
-	// var selection = editor.selection;
+	var selection = editor.selection;
 
 	// vscode.window.showInformationMessage(`${result}`);
 
-	// editor.edit(builder => builder.replace(selection, result + "\n" + parameter_template_string + "\n"));
+	editor.edit(builder => builder.replace(selection, result));
 
 }
 
