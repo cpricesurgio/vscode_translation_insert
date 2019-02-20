@@ -34,12 +34,12 @@ function generateArrayNotation(param_array){
 return " 'param1'=>'blah','param2'=>'blah2'  ";
 }
 
-async function showQuickPickAdvancedTrans(key, editor, parameter_template_string,param_list) {
+async function showQuickPickAdvancedTrans(key, editor, parameter_template_string, param_list, param_inner_functions) {
 	// {{ __('settings.send_billsheet_link_as_pdf', ['billingsheet' => {{ ucfirst(Setting::get('language_bill_sheet', trans_choice('billing.sheet', 1))) }}]) }}
 	var array_string = "";
 
 	for (var k = 0; k < param_list.length; k++) {
-		array_string += '"'+param_list[k]+'"'+'=>'+'""';
+		array_string += '"' + param_list[k] + '"' + '=>' + '' + param_inner_functions[k] + '';
 		if (k < param_list.length){
 			array_string += ",";
 		}
@@ -99,6 +99,7 @@ async function insertNewTranslation(){
 		var entry;
 		if(isAdvanced(text)){
 			var param_list = [];
+			var param_inner_functions =[];
 			var parameter_template_string = text;
 			var translation_indices_left = allIndexOf(text, "{{");
 			var translation_indices_right = allIndexOf(text, "}}");
@@ -107,8 +108,10 @@ async function insertNewTranslation(){
 
 			var index;
 			for (index = 0; index < index_loop_count; ++index) {
+				param_inner_functions.push(parameter_template_string.substring(translation_indices_left[0] + 2, translation_indices_right[0]));
 				parameter_template_string = replaceRange(parameter_template_string, translation_indices_left[0], (translation_indices_right[0]+2), ":param"+index); 
 				param_list.push("param" + index);
+				
 				// vscode.window.showInformationMessage(parameter_template_string);
 				/* reset indices array because string length changes every iteration */
 				translation_indices_left = allIndexOf(parameter_template_string, "{{");
@@ -135,7 +138,7 @@ async function insertNewTranslation(){
 					vscode.window.showInformationMessage(`${err}`);
 				}
 			});
-			showQuickPickAdvancedTrans(clean_key, editor, parameter_template_string, param_list);
+			showQuickPickAdvancedTrans(clean_key, editor, parameter_template_string, param_list, param_inner_functions);
 		}
 		else {
 			clean_key = text.replace(/[^\w\s]/gi, '').toLowerCase();
