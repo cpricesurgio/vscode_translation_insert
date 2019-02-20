@@ -4,7 +4,7 @@ To install this plugin, just put the files in your extensions folder. On ubuntu 
 
 ## Features
 
-Allows a user to select text, press Control-F1, and automatically created an array-style language file entry under /home/yourname/auto_lang.php. 
+Allows a user to select text, press Control-F1, and automatically creat an array-style language file entry under /home/yourname/auto_lang.php when inside a .blade file.
 
 Plugin also employs a quick-pick menu with an auto-suggest for replacing selection with an implementation for the newly created entry.
 
