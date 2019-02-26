@@ -32,18 +32,6 @@ async function showQuickPickSimpleTrans(key, editor, entry, languageFilePath) {
 	
 }
 
-function generateArrayNotation(param_array){
-	var index;
-	var paramater_string_array_format;
-	for (index = 0; index < param_array.length; ++index) {
-	
-
-
-	}
-
-return " 'param1'=>'blah','param2'=>'blah2'  ";
-}
-
 async function showQuickPickAdvancedTrans(key, editor, parameter_template_string, param_list, param_inner_functions, entry, languageFilePath) {
 	// {{ __('settings.send_billsheet_link_as_pdf', ['billingsheet' => {{ ucfirst(Setting::get('language_bill_sheet', trans_choice('billing.sheet', 1))) }}]) }}
 	var array_string = "";
