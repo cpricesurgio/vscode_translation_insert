@@ -4,28 +4,11 @@ import * as vscode from 'vscode';
 import fs = require('fs');
 const os = require('os');
 const path = require("path");
-const walkSync = require('walk-sync');
-const paths = walkSync('project')
+
 // const rp = require("request-promise");
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
-function lookupExistingTranslations(){
-	
-	var walkSync = function (dir, filelist) {
-		var fs = fs || require('fs'),
-			files = fs.readdirSync(dir);
-		filelist = filelist || [];
-		files.forEach(function (file) {
-			if (fs.statSync(dir + '/' + file).isDirectory()) {
-				filelist = walkSync(dir + file + '/', filelist);
-			}
-			else {
-				filelist.push(file);
-			}
-		});
-		return filelist;
-	};
-}
+
 
 async function showQuickPickSimpleTrans(key, editor, entry, languageFilePath) {
 	let i = 0;
