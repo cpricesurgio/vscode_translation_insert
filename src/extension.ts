@@ -3,7 +3,7 @@
 import * as vscode from 'vscode';
 import fs = require('fs');
 const os = require('os');
-const path = require("path");
+// const path = require("path");
 
 // const rp = require("request-promise");
 // this method is called when your extension is activated
